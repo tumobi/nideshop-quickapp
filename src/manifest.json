@@ -23,6 +23,15 @@
       "Index": {
         "component": "index"
       },
+      "Goods": {
+        "component": "index"
+      },
+      "Brand": {
+        "component": "index"
+      },
+      "Topic": {
+        "component": "index"
+      },
       "About": {
         "component": "index"
       }
@@ -35,6 +44,10 @@
     "pages": {
       "Index": {
         "titleBarText": "仿网易严选商城",
+        "menu": true
+      },
+      "Goods": {
+        "titleBarText": "商品详情",
         "menu": true
       },
       "About": {

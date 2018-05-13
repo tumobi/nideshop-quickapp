@@ -9,7 +9,11 @@ helper.request = (method, url, data) => {
       data: data,
       method: method,
       success: function (res) {
-        resolve(JSON.parse(res.data))
+        try {
+          resolve(JSON.parse(res.data))
+        } catch(err) {
+          reject(err)
+        }
       },
       fail: function (data) {
         reject(data)

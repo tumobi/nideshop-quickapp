@@ -1,0 +1,183 @@
+<template>
+  <div class="goods-page">
+    <swiper class="goodsimgs">
+      <image class="img" for="(index, item) in gallery" src="{{item.img_url}}"></image>
+    </swiper>
+    <div class="service-policy">
+      <div class="item">
+        <image class="icon" src="/Common/Image/service_policy_red.png"></image>
+        <text class="txt">30天无忧退货</text>
+      </div>
+      <div class="item">
+        <image class="icon" src="/Common/Image/service_policy_red.png"></image>
+        <text class="txt">48小时快速退款</text>
+      </div>
+      <div class="item">
+        <image class="icon" src="/Common/Image/service_policy_red.png"></image>
+        <text class="txt">满88元免邮费</text>
+      </div>
+    </div>
+    <div class="goods-info">
+      <div class="c">
+        <text class="name">{{goods.name}}</text>
+        <text class="desc">{{goods.goods_brief}}</text>
+        <text class="price">￥{{goods.retail_price}}</text>
+        <div class="brand" if="{{brand.name}}">
+          <text class="txt">{{brand.name}}</text>
+          <image class="icon" src="/Common/Image/detail_tag_arrow.png"></image>
+        </div>
+      </div>
+    </div>
+    <div class="section-nav section-attr" onclick="switchAttrPop">
+      <text class="txt">请选择规格数量</text>
+      <image class="icon" src="/Common/Image/address_right.png"></image>
+    </div>
+    <div class="comments">
+      <div class="h">
+        <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
+        <div class="i">
+          <a href="/" class="txt">查看全部</a>
+          <image class="icon" src="/Common/Image/address_right.png"></image>
+        </div>
+      </div>
+      <div class="b">
+        <div class="item">
+          <div class="info">
+            <div class="user">
+              <image class="avatar" src="{{comment.avatar}}"></image>
+              <text class="nickname">{{comment.nickname}}</text>
+            </div>
+            <text class="time">{{comment.add_time}}</text>
+          </div>
+          <div class="content">
+            <text>{{comment.content}}</text>
+          </div>
+          <div class="imgs">
+            <image class="img" for="(index, item) in comment.pic_list" src="{{item.pic_url}}"></image>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="goods-attr">
+      <text class="t">商品参数</text>
+      <div class="l">
+        <div class="item" for="(index, item) in attribute">
+          <text class="left">{{item.name}}</text>
+          <text class="right">{{item.value}}</text>
+        </div>
+      </div>
+    </div>
+    <div class="detail">
+      <richtext class="detail-content" type="html">{{goods.goods_desc}}</richtext>
+    </div>
+    <div class="common-problem">
+      <div class="h">
+        <div class="line"></div>
+        <text class="title">常见问题</text>
+        <div class="line"></div>
+      </div>
+      <div class="b">
+        <div class="item" for="(index, item) in issueList">
+          <div class="question-box">
+            <text class="spot"></text>
+            <text class="question">{{item.question}}</text>
+          </div>
+          <text class="answer">
+            {{item.answer}}
+          </text>
+        </div>
+      </div>
+    </div>
+    <div class="related-goods">
+      <div class="h">
+        <text class="line"></text>
+        <text class="title">大家都在看</text>
+        <text class="line"></text>
+      </div>
+      <div class="b">
+        <div class="item" for="(index, item) in relatedGoods" onclick="goGoodsDetail(item.id)">
+          <image class="img" src="{{item.list_pic_url}}"></image>
+          <text class="name">{{item.name}}</text>
+          <text class="price">￥{{item.retail_price}}</text>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style src="./goods.css"></style>
+<style>
+</style>
+
+<script>
+  /**
+   * 默认的菜单页(可自定义)
+   * name默认为manifest文件中的name字段
+   * icon默认为manifest文件中的icon字段
+   * 若需修改页面中文本，请修改ViewModel private中对应变量
+   * 注意：使用加载器测试`创建桌面快捷方式`功能时，需要进入系统设置->权限管理->开启应用加载器的`桌面快捷方式`权限，才能保存到桌面。应用上线后可自动获取`桌面快捷方式`权限
+   */
+  import router from '@system.router'
+  import app from '@system.app'
+  import goods from '../Common/Api/goods'
+  export default {
+    protected: {
+      id: 0,
+      goods: {},
+      gallery: [],
+      attribute: [],
+      issueList: [],
+      comment: [],
+      brand: {},
+      specificationList: [],
+      productList: [],
+      relatedGoods: [],
+      cartGoodsCount: 0,
+      userHasCollect: 0,
+      number: 1,
+      checkedSpecText: '请选择规格数量',
+      openAttr: false,
+      noCollectImage: "/static/images/icon_collect.png",
+      hasCollectImage: "/static/images/icon_collect_checked.png",
+      collectBackImage: "/static/images/icon_collect.png"
+    },
+    private: {
+    },
+    onInit() {
+      // 设置标题栏
+      // this.$page.setTitleBar({ text: this.name })
+
+      this.getGoodsDetail()
+    },
+    goGoodsDetail (id) {
+      router.push({
+        uri: '/Goods',
+        params: {
+          id
+        }
+      })
+    },
+    getGoodsDetail() {
+      goods.getGoodsDetail(this.id).then(result => {
+        result = result.data;
+        this.goods = result.info
+        this.gallery = result.gallery
+        this.attribute = result.attribute
+        this.issueList = result.issue
+        result.comment = Object.assign(result.comment, result.comment.data)
+        this.comment = result.comment
+        delete this.comment.data
+        this.brand = result.brand
+        this.specificationList = result.specificationList
+        this.productList = result.productList
+        this.userHasCollect = result.userHasCollect
+        this.getGoodsRelated()
+      })
+    },
+    getGoodsRelated() {
+      goods.getRelatedGoods(this.id).then((result) => {
+        this.relatedGoods = result.data.goodsList
+      })
+    },
+  }
+</script>

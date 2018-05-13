@@ -1,7 +1,6 @@
 {
   "env": {
-    "commonjs": true,
-    "es6": true
+    "commonjs": true
   },
   "extends": "eslint:recommended",
   "parser": "babel-eslint",

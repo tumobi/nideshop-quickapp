@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="b">
-        <stack class="item" for="(index, item) in brands" class="item-{{index}}">
+        <stack class="item" for="(index, item) in brands" class="item-{{index}}" onclick="goRouter(item.id, '/Brand')">
           <image class="img" src="{{item.new_pic_url}}"></image>
           <div class="mt">
             <text class="brand">{{item.name}}</text>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="b">
-        <div class="item" for="(index, item) in newGoods">
+        <div class="item" for="(index, item) in newGoods" onclick="goRouter(item.id, '/Goods')">
           <image class="img" src="{{item.list_pic_url}}"></image>
           <text class="name">{{item.name}}</text>
           <text class="price">￥{{item.retail_price}}</text>
@@ -49,7 +49,7 @@
         </div>
       </div>
       <div class="b">
-        <div class="item" for="(index, item) in hotGoods">
+        <div class="item" for="(index, item) in hotGoods" onclick="goRouter(item.id, '/Goods')">
           <div>
             <image class="img" src="{{item.list_pic_url}}"></image>
             <div class="right">
@@ -74,7 +74,7 @@
       </div>
       <div class="b">
         <list class="list">
-          <list-item class="item" for="(index, item) in topicList" disabled="{{index === 0}}" type="topic-item">
+          <list-item class="item" for="(index, item) in topicList" disabled="{{index === 0}}" type="topic-item" onclick="goRouter(item.id, '/Topic')">
             <image class="img" src="{{item.scene_pic_url}}"></image>
             <div class="np">
               <text class="name">{{item.title}}</text>
@@ -90,7 +90,7 @@
         <text>{{item.name}}</text>
       </div>
       <div class="b">
-        <div for="(iindex, iitem) in item.goodsList" class="item" disabled="{{iindex % 2 === 0}}">
+        <div for="(iindex, iitem) in item.goodsList" class="item" disabled="{{iindex % 2 === 0}}" onclick="goRouter(iitem.id, '/Goods')">
           <image class="img" src="{{iitem.list_pic_url}}"></image>
           <text class="name">{{iitem.name}}</text>
           <text class="price">￥{{iitem.retail_price}}</text>
@@ -104,364 +104,13 @@
   </div>
 </template>
 
+<style src="./index.css"></style>
 <style>
-  .index-page {
-    background-color: #f4f4f4;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-  }
 
-  .banner {
-    width: 100%;
-    height: 417px;
-    indicator-color: rgba(0, 0, 0, 0.1);
-    indicator-selected-color: rgba(0, 0, 0, 0.6);
-    indicator-size: 16px;
-  }
-
-  .banner image {
-    width: 100%;
-    height: 417px;
-    resize-mode: cover;
-  }
-
-  .m-menu {
-    flex-direction: row;
-    display: flex;
-    height: 181px;
-    width: 100%;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #ffffff;
-  }
-
-  .m-menu .item {
-    flex: 1;
-    padding: 20px 0;
-    height: 141px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .m-menu image {
-    width: 58px;
-    height: 58px;
-    margin-bottom: 12px;
-    resize-mode: cover;
-  }
-
-  .m-menu text {
-    font-size: 24px;
-    text-align: center;
-    height: 30px;
-    color: #333333;
-  }
-
-  .a-section {
-    width: 100%;
-    background-color: #ffffff;
-    flex-direction: column;
-    color: #333333;
-    margin-top: 20px;
-  }
-
-  .a-section .h {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-    height: 130px;
-  }
-
-  .a-section .h .txt {
-    padding-right: 30px;
-    display: flex;
-    height: 36px;
-    font-size: 33px;
-    line-height: 36px;
-  }
-
-  .a-brand {
-    height: 634px;
-  }
-
-  .a-brand .b {
-    width: 100%;
-    height: 504px;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .a-brand .item {
-    width: 375px;
-    height: 252px;
-    background-color: #f4f4f4;
-    margin: 0 0 1px 0;
-    border-left-width: 1px;
-    border-left-color: #ffffff;
-    border-right-width: 1px;
-    border-right-color: #ffffff;
-  }
-
-  .a-brand .img {
-    width: 375px;
-    height: 252px;
-    resize-mode: cover;
-  }
-
-  .a-brand .mt {
-    padding: 27px 31px;
-    flex-direction: column;
-  }
-
-  .a-brand .mt .brand {
-    display: flex;
-    font-size: 33px;
-    height: 43px;
-    color: #333333;
-  }
-
-  .a-brand .mt .price {
-    font-size: 25px;
-    color: #999999;
-  }
-
-  .a-new .b {
-    width: 100%;
-    padding: 0 31px 45px 31px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .a-new .b .item {
-    width: 302px;
-    margin: 10px 21px 0 21px;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .a-new .b .item-b {
-    margin: 0 0 0 42px;
-  }
-
-  .a-new .b .img {
-    width: 302px;
-    height: 302px;
-  }
-
-  .a-new .b .name {
-    text-align: center;
-    width: 302px;
-    height: 35px;
-    margin: 0 0 14px 0;
-    font-size: 30px;
-    color: #333333;
-  }
-
-  .a-new .b .price {
-    text-align: center;
-    line-height: 30px;
-    font-size: 30px;
-    color: #b4282d;
-  }
-
-  .a-popular {
-    width: 100%;
-  }
-
-  .a-popular .b {
-    flex-direction: column;
-  }
-
-  .a-popular .b .item {
-    border-top-width: 1px;
-    border-top-color: #d9d9d9;
-    margin: 0 20px;
-    height: 264px;
-    width: 710px;
-  }
-
-  .a-popular .b .img {
-    margin-top: 12px;
-    margin-right: 12px;
-    width: 240px;
-    height: 240px;
-  }
-
-  .a-popular .b .right {
-    height: 264px;
-    width: 456px;
-    display: flex;
-  }
-
-  .a-popular .b .text {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    justify-content: center;
-    height: 264px;
-    width: 456px;
-  }
-
-  .a-popular .b .name {
-    width: 456px;
-    color: #333333;
-    line-height: 50px;
-    font-size: 30px;
-  }
-
-  .a-popular .b .desc {
-    width: 456px;
-    color: #999999;
-    line-height: 50px;
-    font-size: 25px;
-  }
-
-  .a-popular .b .price {
-    width: 456px;
-    color: #b4282d;
-    line-height: 50px;
-    font-size: 33px;
-  }
-
-  .a-topic .b {
-    height: 533px;
-    width: 100%;
-    padding: 0 0 48px 0;
-  }
-
-  .a-topic .b .list {
-    height: 533px;
-    width: 100%;
-    flex-direction: row;
-    column-span: 1;
-  }
-
-  .a-topic .b .item {
-    height: 533px;
-    width: 680.5px;
-    margin-right: 30px;
-    flex-direction: column;
-  }
-
-  .a-topic .b .item:disabled {
-    margin-left: 30px;
-  }
-
-  .a-topic .b .img {
-    height: 387.5px;
-    width: 680.5px;
-    margin-bottom: 30px;
-  }
-
-  .a-topic .b .np {
-    height: 35px;
-    margin-bottom: 13.5px;
-    color: #333333;
-    font-size: 30px;
-  }
-
-  .a-topic .b .np .price {
-    margin-left: 20.8px;
-    color: #b4282d;
-  }
-
-  .a-topic .b .desc {
-    height: 30px;
-    color: #999999;
-    font-size: 24px;
-    text-overflow: ellipsis;
-  }
-
-  .good-grid {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .good-grid .h {
-    align-items: center;
-    justify-content: center;
-    height: 130px;
-    font-size: 33px;
-    color: #333333;
-  }
-
-  .good-grid .b {
-    width: 100%;
-    padding: 0 6.25px;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .good-grid .b .item {
-    background-color: #ffffff;
-    width: 365px;
-    margin-bottom: 6.25px;
-    height: 452px;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-  }
-
-
-  .good-grid .b .item:disabled {
-    margin-right: 6.25px;
-  }
-
-  .good-grid .item .img {
-    margin-top: 20px;
-    width: 302px;
-    height: 302px;
-  }
-
-  .good-grid .item .name {
-    width: 365.625px;
-    padding: 0 20px;
-    height: 35px;
-    margin: 11.5px 0 22px 0;
-    text-align: center;
-    font-size: 30px;
-    color: #333333;
-  }
-
-  .good-grid .item .price {
-    width: 365.625px;
-    height: 30px;
-    text-align: center;
-    font-size: 30px;
-    color: #b4282d;
-  }
-
-  .good-grid .b .more-a {
-    width: 365px;
-    height: 452px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .good-grid .b .more-a .txt {
-    height: 33px;
-    line-height: 33px;
-    color: #333333;
-    font-size: 33px;
-  }
-
-  .good-grid .b .more-a .icon {
-    margin: 30px 0 0 0;
-    width: 70px;
-    height: 70px;
-  }
 </style>
 
 <script>
   import router from '@system.router'
-  import fetch from '@system.fetch'
   import app from '@system.app'
   import index from '../Common/Api/index'
 
@@ -479,10 +128,12 @@
     onInit() {
       this.getIndexData()
     },
-    routeDetail() {
-      // 跳转到应用内的某个页面，router用法详见：文档->接口->页面路由
+    goRouter (id, path) {
       router.push({
-        uri: '/DemoDetail'
+        uri: path,
+        params: {
+          id
+        }
       })
     },
     onMenuPress() {
